@@ -1,0 +1,27 @@
+{
+    "name": "pivots",
+    "version": "0.0.1",
+    "description": "TODO",
+    "keywords": [
+        "d3",
+        "d3-module"
+    ],
+    "license": "MIT",
+    "main": "build/d3-pivots.js",
+    "jsnext:main": "index",
+    "homepage": "https://github.com/ksokolovic/d3-pivots",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/ksokolovic/d3-pivots.git"
+    },
+    "scripts": {
+        "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-pivots.js -- index.js",
+        "test": "",
+        "prepublish": "npm run test && uglifyjs build/d3-pivots.js -c -m -o build/d3-pivots.min.js",
+        "postpublish": "zip -j build/d3-pivots.zip -- LICENSE README.md build/d3-pivots.js build/d3-pivots.min.js"
+    },
+    "devDependencies": {
+        "rollup": "1.12.4",
+        "uglify-js": "3.5.15"
+    }
+}

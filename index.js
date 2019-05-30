@@ -1,1 +1,1 @@
-export {default as pivots} from './src/pivots';
+export {default as pivotBarChart} from './src/pivots';

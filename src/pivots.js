@@ -1,12 +1,32 @@
 function pivotBarChart() {
-    var width,
-        height;
+    var width = 600,
+        height = 800,
+        margin = {top: 0, right: 0, bottom: 0, left: 0};
 
     function chart(selection) {
         selection.each(function(d, i) {
-            // Generate chart here, `d` is the data, `this` is the element
+            // Fit the chart with margins
+            var chartWidth = width - margin.left - margin.right;
+            var chartHeight = height - margin.top - margin.bottom;
+
+            var svg = d3.select(this)
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            var chart = svg.append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+            // Dummy line to test module
+            chart.append('line')
+                .attr('x1', 0)
+                .attr('y1', 0)
+                .attr('x2', chartWidth)
+                .attr('y2', chartHeight)
+                .style('stroke-width', 1)
+                .style('stroke', 'black')
+                .style('fill', 'none');
         });
-        // Generate chart here, using `width` and `height`
     }
 
     chart.width = function(value) {
@@ -22,6 +42,14 @@ function pivotBarChart() {
             return height;
         }
         height = value;
+        return chart;
+    }
+
+    chart.margin = function(value) {
+        if (!arguments.length) {
+            return margin;
+        }
+        margin = value;
         return chart;
     }
 

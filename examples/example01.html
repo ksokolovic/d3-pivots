@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="assets/js/jquery-3.4.1.min.js"></script>
+
     <script src="../build/d3-pivots.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
     <div id="chart">
     </div>
+
+    <script>
+        $(document).ready(function() {
+            let pivotBarChart = d3.pivotBarChart().width(500).height(500);
+            d3.select('#chart')
+                .call(pivotBarChart);
+        });
+    </script>
 </body>
 </html>

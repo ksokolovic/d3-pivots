@@ -1,5 +1,5 @@
 {
-    "name": "pivots",
+    "name": "d3-pivots",
     "version": "0.0.1",
     "description": "TODO",
     "keywords": [
@@ -15,13 +15,16 @@
         "url": "https://github.com/ksokolovic/d3-pivots.git"
     },
     "scripts": {
-        "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-pivots.js -- index.js",
-        "test": "tape 'test/**/*-test.js'",
-        "prepublish": "npm run test && uglifyjs build/d3-pivots.js -c -m -o build/d3-pivots.min.js",
+        "pretest": "rollup -c",
+        "test": "tape 'test/**/*-test.js' && eslint src",
+        "prepublish": "rm -rf build && yarn test",
         "postpublish": "zip -j build/d3-pivots.zip -- LICENSE README.md build/d3-pivots.js build/d3-pivots.min.js"
     },
     "devDependencies": {
+        "d3": "5.9.2",
+        "eslint": "5.16.0",
         "rollup": "1.12.4",
+        "rollup-plugin-terser": "5.0.0",
         "uglify-js": "3.5.15",
         "tape": "4.10.2"
     }

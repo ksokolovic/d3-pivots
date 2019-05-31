@@ -1,20 +1,23 @@
+import {select} from 'd3';
+
 function pivotBarChart() {
-    var width = 600,
+    let width = 600,
         height = 800,
         margin = {top: 0, right: 0, bottom: 0, left: 0};
 
     function chart(selection) {
         selection.each(function(d, i) {
+            console.log(d + i);
             // Fit the chart with margins
-            var chartWidth = width - margin.left - margin.right;
-            var chartHeight = height - margin.top - margin.bottom;
+            let chartWidth = width - margin.left - margin.right;
+            let chartHeight = height - margin.top - margin.bottom;
 
-            var svg = d3.select(this)
+            let svg = select(this)
                 .append('svg')
                 .attr('width', width)
                 .attr('height', height);
 
-            var chart = svg.append('g')
+                let chart = svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             // Dummy line to test module

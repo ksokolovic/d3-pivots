@@ -17,7 +17,7 @@ function pivotBarChart() {
                 .attr('width', width)
                 .attr('height', height);
 
-                let chart = svg.append('g')
+            let chart = svg.append('g')
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             // Dummy line to test module

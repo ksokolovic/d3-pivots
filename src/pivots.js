@@ -106,9 +106,22 @@ function pivotBarChart() {
                 });
         }
 
-        for (let i = 0; i < xLabels.length; ++i) {
-            let xAxis = xLabels[i];
-        }
+        // X-Axis pivot ticks
+        canvas.append('line')
+            .attr('x1', 0 + 0.5)
+            .attr('y1', chartHeight)
+            .attr('x2', 0 + 0.5)
+            .attr('y2', chartHeight + xLabels.length * x.offset)
+            .style('stroke-width', 1)
+            .style('stroke', '#000000');
+
+        canvas.append('line')
+            .attr('x1', xAxisWidth - 0.5)
+            .attr('y1', chartHeight)
+            .attr('x2', xAxisWidth - 0.5)
+            .attr('y2', chartHeight + xLabels.length * x.offset)
+            .style('stroke-width', 1)
+            .style('stroke', '#000000');
 
         // Add additional 0.5 pixels to the y-coordinate of the axis line
         // to match the left y-axis tick

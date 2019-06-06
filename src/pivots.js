@@ -5,6 +5,8 @@ function pivotBarChart() {
 
     let data = null;
 
+    console.log(repeatArray([1, 2, 3], 3));
+
     function chart(selection) {
         selection.each(function(d, i) {
             console.log(d + i);
@@ -22,6 +24,7 @@ function pivotBarChart() {
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
             // Dummy line to test module
+            drawXAxis();
             chart.append('line')
                 .attr('x1', 0)
                 .attr('y1', 0)
@@ -32,6 +35,24 @@ function pivotBarChart() {
                 .style('fill', 'none');
         });
     }
+
+    // #region Chart drawing
+
+    function drawXAxis() {
+
+    }
+
+    // #endregion
+
+    // #region Helper functions
+
+    function repeatArray(array, times) {
+        return [].concat(...Array.from({ length: times }, () => array));
+    }
+
+    // #endregion
+
+    // #region Getters and Setters
 
     chart.width = function(value) {
         if (!arguments.length) {
@@ -63,7 +84,9 @@ function pivotBarChart() {
         }
         data = value;
         return chart;
-    }
+    };
+
+    // #endregion
 
     return chart;
 }

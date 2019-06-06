@@ -204,7 +204,7 @@ function pivotBarChart() {
             let group = groupBy.x[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[groupBy.x[groupBy.x.length - 1]], unique[groupBy.x[groupBy.x.length - 1]].length));
+        xLabels.push(repeatArray(unique[groupBy.x[groupBy.x.length - 1]], data.length / unique[groupBy.x[groupBy.x.length - 1]].length));
 
         return xLabels;
     }

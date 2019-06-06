@@ -122,9 +122,9 @@ function pivotBarChart() {
             .style('stroke', '#000000');
 
         canvas.append('line')
-            .attr('x1', xAxisWidth - bar.offset / 2 - 0.5)
+            .attr('x1', xAxisWidth - 0.5 + 2 * bar.offset)
             .attr('y1', chartHeight)
-            .attr('x2', xAxisWidth - bar.offset / 2 - 0.5)
+            .attr('x2', xAxisWidth - 0.5 + 2 * bar.offset)
             .attr('y2', chartHeight + xLabels.length * x.offset)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
@@ -134,7 +134,7 @@ function pivotBarChart() {
         canvas.append('line')
             .attr('x1', 0)
             .attr('y1', chartHeight + 0.5)
-            .attr('x2', xAxisWidth)
+            .attr('x2', xAxisWidth + 2 * bar.offset)
             .attr('y2', chartHeight + 0.5)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
@@ -212,17 +212,17 @@ function pivotBarChart() {
     function getXAxisLabels() {
         let unique = {};
 
-        for (const group of groupBy.x) {
+        for (const group of groupBy.columns) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 
         let xLabels = [];
-        xLabels.push(unique[groupBy.x[0]]);
-        for (let i = 1; i < groupBy.x.length - 1; ++i) {
-            let group = groupBy.x[i];
+        xLabels.push(unique[groupBy.columns[0]]);
+        for (let i = 1; i < groupBy.columns.length - 1; ++i) {
+            let group = groupBy.columns[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[groupBy.x[groupBy.x.length - 1]], data.length / unique[groupBy.x[groupBy.x.length - 1]].length / yLabels.length));
+        xLabels.push(repeatArray(unique[groupBy.columns[groupBy.columns.length - 1]], data.length / unique[groupBy.columns[groupBy.columns.length - 1]].length / yLabels.length));
 
         return xLabels;
     }
@@ -230,7 +230,7 @@ function pivotBarChart() {
     function getYAxisLabels() {
         let unique = {};
 
-        for (const group of groupBy.y) {
+        for (const group of groupBy.rows) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 

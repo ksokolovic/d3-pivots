@@ -6,6 +6,19 @@
 
     <script src="../build/d3-pivots.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
+
+    <style>
+        div.tooltip {
+            position: absolute;
+            text-align: center;
+            padding: 2px;
+            font: 12px sans-serif;
+            background: lightsteelblue;
+            border: 0px;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
     <div id="chart">
@@ -13,13 +26,16 @@
 
     <script>
         // #region Sample data
-        let data = [];
+        let data1 = [];
+        let data2 = [];
 
         let categories = ['Category 1', 'Category 2', 'Category 3'];
         let subcategories = ['Subcategory 1', 'Subcategory 2'];
         let years = [2018, 2019];
         let quartals = ['Q1', 'Q2', 'Q3', 'Q4'];
         let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let genders = ['Male', 'Female'];
+        let countries = ['USA', 'Serbia'];
 
         let quartalsToMonthsMapping = {
             'Q1': ['Jan', 'Feb', 'Mar'],
@@ -37,12 +53,37 @@
                                 continue;
                             }
 
-                            data.push({
+                            for (const country of countries) {
+                                for (const gender of genders) {
+                                    data1.push({
+                                        category: category,
+                                        subcategory: subcategory,
+                                        year: year,
+                                        quartal: quartal,
+                                        month: month,
+                                        gender: gender,
+                                        country: country,
+                                        value: Math.random() * 100 + 1
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (const category of categories) {
+            for (const subcategory of subcategories) {
+                for (const year of years) {
+                    for (const country of countries) {
+                        for (const gender of genders) {
+                            data2.push({
                                 category: category,
                                 subcategory: subcategory,
                                 year: year,
-                                quartal: quartal,
-                                month: month,
+                                gender: gender,
+                                country: country,
                                 value: Math.random() * 100 + 1
                             });
                         }
@@ -52,15 +93,20 @@
         }
         // #endregion
         
-        let groupBy = {
-            x: ['category', 'subcategory', 'year', 'quartal', 'month'],
-            y: undefined
+        let groupBy1 = {
+            columns: ['category', 'subcategory', 'year'],
+            rows: ['country', 'gender', 'quartal']
+        };
+
+        let groupBy2 = {
+            columns: ['category', 'subcategory', 'year'],
+            rows: ['country', 'gender']
         };
 
         $(document).ready(function() {
             let pivotBarChart = d3.pivotBarChart()
-                .data(data)
-                .groupBy(groupBy);
+                .data(data2)
+                .groupBy(groupBy2);
             d3.select('#chart')
                 .call(pivotBarChart);
         });

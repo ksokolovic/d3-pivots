@@ -132,6 +132,22 @@ function pivotBarChart() {
             .attr('y2', chartHeight + 0.5)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
+
+        let labelsReversed = xLabels.reverse();
+        for (let i = 0; i < labelsReversed.length; ++i) {
+            let xAxis = labelsReversed[i];
+            
+            for (let j = 1; j <= xAxis.length - 1; ++j) {
+                canvas.append('line')
+                    .attr('x1', j * xAxisWidth / xAxis.length + bar.offset / 2)
+                    .attr('y1', chartHeight)
+                    .attr('x2', j * xAxisWidth / xAxis.length + bar.offset / 2)
+                    .attr('y2', chartHeight + (i + 1) * x.offset)
+                    .attr('class', xAxis[j])
+                    .style('stroke-width', 1)
+                    .style('stroke', '#000000');
+            }    
+        }
     }
 
     function drawYAxis() {

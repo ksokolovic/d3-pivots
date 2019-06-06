@@ -15,19 +15,21 @@ function pivotBarChart() {
 
     let data = null,
         groupBy = null,
-        xLabels = null;
+        xLabels = null,
+        yLabels = null;
 
     let y = undefined;
 
     function chart(selection) {
         selection.each(function() {
+            yLabels = getYAxisLabels();
             xLabels = getXAxisLabels();
 
             // Fit the chart with margins
             chartWidth = width - margin.left - margin.right;
             chartHeight = height - margin.top - margin.bottom + 15 - xLabels.length * x.offset;
 
-            canvasWidth = chartWidth - (xLabels[0].length - 1) * bar.groupOffset;
+            canvasWidth = chartWidth - (xLabels[xLabels.length - 1].length - 1) * bar.groupOffset;
             y = d3.scaleLinear().range([chartHeight, 0]);
             y.domain([0, maxValue()]);
 
@@ -49,6 +51,7 @@ function pivotBarChart() {
 
     function drawBars() {
         let colors = getRandomColorPalette(data.length);
+        let barOffset = 0;
 
         canvas.selectAll('.bar')
             .data(data)
@@ -58,7 +61,13 @@ function pivotBarChart() {
             .attr('x', function(d, i) {
                 let value = i * canvasWidth / data.length;
 
-                return value + bar.offset;
+                let groupSize = yLabels.length;
+                if (i % groupSize === 0) {
+                    barOffset += bar.groupOffset;
+                    xAxisWidth += bar.groupOffset;
+                }
+
+                return value + barOffset;
             })
             .attr('width', function() {
                 let barWidth = (canvasWidth / data.length) - bar.offset;
@@ -83,9 +92,6 @@ function pivotBarChart() {
             let className = 'text.' + label;
             let xAxis = xLabels[i];
 
-            // Parametrize:
-            //   15 - offset in pixels for the first row of x-axis labels from the x-axis line
-            //   25 - offset between two consecutive x-axes' labels
             canvas.selectAll(className)
                 .data(xAxis)
                 .enter()
@@ -116,9 +122,9 @@ function pivotBarChart() {
             .style('stroke', '#000000');
 
         canvas.append('line')
-            .attr('x1', xAxisWidth - 0.5)
+            .attr('x1', xAxisWidth - bar.offset / 2 - 0.5)
             .attr('y1', chartHeight)
-            .attr('x2', xAxisWidth - 0.5)
+            .attr('x2', xAxisWidth - bar.offset / 2 - 0.5)
             .attr('y2', chartHeight + xLabels.length * x.offset)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
@@ -139,9 +145,9 @@ function pivotBarChart() {
             
             for (let j = 1; j <= xAxis.length - 1; ++j) {
                 canvas.append('line')
-                    .attr('x1', j * xAxisWidth / xAxis.length + bar.offset / 2)
+                    .attr('x1', j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2)
                     .attr('y1', chartHeight)
-                    .attr('x2', j * xAxisWidth / xAxis.length + bar.offset / 2)
+                    .attr('x2', j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2)
                     .attr('y2', chartHeight + (i + 1) * x.offset)
                     .attr('class', xAxis[j])
                     .style('stroke-width', 1)
@@ -191,6 +197,18 @@ function pivotBarChart() {
         return [].concat(...Array.from({ length: times }, () => array));
     }
 
+    function cartesianProductOf() {
+        let product = _.reduce(arguments, function(a, b) {
+            return _.flatten(_.map(a, function(x) {
+                return _.map(b, function(y) {
+                    return x.concat([y]);
+                });
+            }), true);
+        }, [ [] ]);
+
+        return product.map(p => p.join(' '));
+    }
+
     function getXAxisLabels() {
         let unique = {};
 
@@ -204,9 +222,21 @@ function pivotBarChart() {
             let group = groupBy.x[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[groupBy.x[groupBy.x.length - 1]], data.length / unique[groupBy.x[groupBy.x.length - 1]].length));
+        xLabels.push(repeatArray(unique[groupBy.x[groupBy.x.length - 1]], data.length / unique[groupBy.x[groupBy.x.length - 1]].length / yLabels.length));
 
         return xLabels;
+    }
+
+    function getYAxisLabels() {
+        let unique = {};
+
+        for (const group of groupBy.y) {
+            unique[group] = _.unique(data, group).map(unique => unique[group]);
+        }
+
+        let uniqueValues = Object.entries(unique).map(entry => entry[1]);
+
+        return cartesianProductOf(...uniqueValues);
     }
 
     // #endregion

@@ -39,7 +39,7 @@ function pivotBarChart() {
         }
         width = value;
         return chart;
-    }
+    };
 
     chart.height = function(value) {
         if (!arguments.length) {
@@ -47,7 +47,7 @@ function pivotBarChart() {
         }
         height = value;
         return chart;
-    }
+    };
 
     chart.margin = function(value) {
         if (!arguments.length) {
@@ -55,7 +55,7 @@ function pivotBarChart() {
         }
         margin = value;
         return chart;
-    }
+    };
 
     chart.data = function(value) {
         if (!arguments.length) {

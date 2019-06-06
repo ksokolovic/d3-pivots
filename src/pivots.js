@@ -228,13 +228,18 @@ function pivotBarChart() {
         return product.map(p => p.join(' '));
     }
 
-    function getXAxisLabels() {
+    function getUniqueXValues() {
         let unique = {};
 
         for (const group of groupBy.columns) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 
+        return unique;
+    }
+
+    function getXAxisLabels() {
+        let unique = getUniqueXValues();
         let xLabels = [];
         xLabels.push(unique[groupBy.columns[0]]);
         for (let i = 1; i < groupBy.columns.length - 1; ++i) {
@@ -246,13 +251,18 @@ function pivotBarChart() {
         return xLabels;
     }
 
-    function getYAxisLabels() {
+    function getUniqueYValues() {
         let unique = {};
 
         for (const group of groupBy.rows) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 
+        return unique;
+    }
+
+    function getYAxisLabels() {
+        let unique = getUniqueYValues();
         let uniqueValues = Object.entries(unique).map(entry => entry[1]);
 
         return cartesianProductOf(...uniqueValues);

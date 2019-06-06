@@ -53,6 +53,11 @@ function pivotBarChart() {
         let colors = getRandomColorPalette(data.length);
         let barOffset = 0;
 
+        let tooltip = d3.select('body')
+            .append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
+
         canvas.selectAll('.bar')
             .data(data)
             .enter()
@@ -83,6 +88,19 @@ function pivotBarChart() {
             })
             .attr('fill', function(d, i) {
                 return colors[i % yLabels.length];
+            })
+            .on('mouseover', function(d) {
+                tooltip.transition()
+                    .duration(200)
+                    .style('opacity', 0.9);
+                tooltip.html(getTooltipHtml(d))
+                    .style('left', (d3.event.pageX - tooltip.node().getBoundingClientRect().width) + 'px')
+                    .style('top', (d3.event.pageY - tooltip.node().getBoundingClientRect().height) + 'px');
+            })
+            .on('mouseout', function() {
+                tooltip.transition()
+                    .duration(500)
+                    .style('opacity', 0);
             });
     }
 
@@ -238,6 +256,23 @@ function pivotBarChart() {
         let uniqueValues = Object.entries(unique).map(entry => entry[1]);
 
         return cartesianProductOf(...uniqueValues);
+    }
+
+    function getTooltipHtml(point) {
+        let tooltip = '<table class="table table-bordered m-b-none"><tbody>';
+        for (let key in point) {
+            if (key.startsWith('$')) {
+                continue;
+            }
+
+            let capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+
+            tooltip += '<tr><td>' + capitalizedKey + ':</td><td>' + point[key] + '</td></tr>';
+        }
+
+        tooltip += '</tbody></table>';
+
+        return tooltip;
     }
 
     // #endregion

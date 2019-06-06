@@ -5,7 +5,7 @@ function pivotBarChart() {
         height = 800,
         margin = {top: 10, right: 25, bottom: 10, left: 25},
         bar = {groupOffset: 10, offset: 2},
-        x = {offset: 25};
+        xAxisLabels = {horizontalGap: 22};
 
     let chartWidth,
         chartHeight;
@@ -27,7 +27,7 @@ function pivotBarChart() {
 
             // Fit the chart with margins
             chartWidth = width - margin.left - margin.right;
-            chartHeight = height - margin.top - margin.bottom + 15 - xLabels.length * x.offset;
+            chartHeight = height - margin.top - margin.bottom + 15 - xLabels.length * xAxisLabels.horizontalGap;
 
             canvasWidth = chartWidth - (xLabels[xLabels.length - 1].length - 1) * bar.groupOffset;
             y = d3.scaleLinear().range([chartHeight, 0]);
@@ -115,7 +115,7 @@ function pivotBarChart() {
                 .enter()
                 .append('text')
                 .attr('class', label)
-                .attr('y', height - 15 - i * x.offset)
+                .attr('y', height - 15 - i * xAxisLabels.horizontalGap)
                 .attr('text-anchor', 'middle')
                 .text(function(d) {
                     return d;
@@ -136,7 +136,7 @@ function pivotBarChart() {
             .attr('x1', 0 + 0.5)
             .attr('y1', chartHeight)
             .attr('x2', 0 + 0.5)
-            .attr('y2', chartHeight + xLabels.length * x.offset)
+            .attr('y2', chartHeight + xLabels.length * xAxisLabels.horizontalGap)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
 
@@ -144,7 +144,7 @@ function pivotBarChart() {
             .attr('x1', xAxisWidth - 0.5 + 2 * bar.offset)
             .attr('y1', chartHeight)
             .attr('x2', xAxisWidth - 0.5 + 2 * bar.offset)
-            .attr('y2', chartHeight + xLabels.length * x.offset)
+            .attr('y2', chartHeight + xLabels.length * xAxisLabels.horizontalGap)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
 
@@ -167,7 +167,7 @@ function pivotBarChart() {
                     .attr('x1', j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2)
                     .attr('y1', chartHeight)
                     .attr('x2', j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2)
-                    .attr('y2', chartHeight + (i + 1) * x.offset)
+                    .attr('y2', chartHeight + (i + 1) * xAxisLabels.horizontalGap)
                     .attr('class', xAxis[j])
                     .style('stroke-width', 1)
                     .style('stroke', '#000000');

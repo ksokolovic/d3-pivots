@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="assets/js/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/underscore-min.js"></script>
 
     <script src="../build/d3-pivots.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
@@ -11,8 +12,55 @@
     </div>
 
     <script>
+        // #region Sample data
+        let data = [];
+
+        let categories = ['Category 1', 'Category 2', 'Category 3'];
+        let subcategories = ['Subcategory 1', 'Subcategory 2'];
+        let years = [2018, 2019];
+        let quartals = ['Q1', 'Q2', 'Q3', 'Q4'];
+        let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        let quartalsToMonthsMapping = {
+            'Q1': ['Jan', 'Feb', 'Mar'],
+            'Q2': ['Apr', 'May', 'Jun'],
+            'Q3': ['Jul', 'Aug', 'Sep'],
+            'Q4': ['Oct', 'Nov', 'Dec']
+        };
+
+        for (const category of categories) {
+            for (const subcategory of subcategories) {
+                for (const year of years) {
+                    for (const quartal of quartals) {
+                        for (const month of months) {
+                            if (!quartalsToMonthsMapping[quartal].includes(month)) {
+                                continue;
+                            }
+
+                            data.push({
+                                category: category,
+                                subcategory: subcategory,
+                                year: year,
+                                quartal: quartal,
+                                month: month,
+                                value: Math.random() * 100 + 1
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        // #endregion
+        
+        let groupBy = {
+            x: ['category', 'subcategory', 'year', 'quartal', 'month'],
+            y: undefined
+        };
+
         $(document).ready(function() {
-            let pivotBarChart = d3.pivotBarChart().width(500).height(500);
+            let pivotBarChart = d3.pivotBarChart()
+                .data(data)
+                .groupBy(groupBy);
             d3.select('#chart')
                 .call(pivotBarChart);
         });

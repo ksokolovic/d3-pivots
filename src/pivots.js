@@ -70,7 +70,7 @@ function pivotBarChart() {
                 return value + barOffset;
             })
             .attr('width', function() {
-                let barWidth = (canvasWidth / data.length) - bar.offset;
+                let barWidth = Math.abs((canvasWidth / data.length) - bar.offset);
                 xAxisWidth += (barWidth + bar.offset);
 
                 return barWidth;
@@ -82,7 +82,7 @@ function pivotBarChart() {
                 return chartHeight - y(d.value);
             })
             .attr('fill', function(d, i) {
-                return colors[i];
+                return colors[i % yLabels.length];
             });
     }
 

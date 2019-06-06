@@ -20,6 +20,13 @@ function pivotBarChart() {
 
     let y = undefined;
 
+    let pointValue = function(point) {
+        if (point.hasOwnProperty('value')) {
+            return point.value;
+        }
+        return 0;
+    };
+
     function chart(selection) {
         selection.each(function() {
             yLabels = getYAxisLabels();
@@ -81,10 +88,10 @@ function pivotBarChart() {
                 return barWidth;
             })
             .attr('y', function(d) {
-                return y(d.value);
+                return y(pointValue(d));
             })
             .attr('height', function(d) {
-                return chartHeight - y(d.value);
+                return chartHeight - y(pointValue(d));
             })
             .attr('fill', function(d, i) {
                 return colors[i % yLabels.length];
@@ -205,11 +212,12 @@ function pivotBarChart() {
     }
 
     function maxValue() {
-        let maxPoint = _.max(data, function(point) {
-            return point.value;
+        let mappedData = data.map(point => pointValue(point));
+        let maxPoint = _.max(mappedData, function(point) {
+            return point;
         });
 
-        return maxPoint.value;
+        return maxPoint;
     }
 
     function repeatArray(array, times) {
@@ -326,6 +334,14 @@ function pivotBarChart() {
             return groupBy;
         }
         groupBy = value;
+        return chart;
+    };
+
+    chart.pointValue = function(value) {
+        if (!arguments.length) {
+            return pointValue;
+        }
+        pointValue = value;
         return chart;
     };
 

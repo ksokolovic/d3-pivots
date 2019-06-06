@@ -3,7 +3,8 @@ function pivotBarChart() {
         height = 800,
         margin = {top: 0, right: 0, bottom: 0, left: 0};
 
-    let data = null;
+    let data = null,
+        groupBy = null;
 
     console.log(repeatArray([1, 2, 3], 3));
 
@@ -50,6 +51,10 @@ function pivotBarChart() {
         return [].concat(...Array.from({ length: times }, () => array));
     }
 
+    function getXAxisLabels() {
+        let unique = {};
+    }
+
     // #endregion
 
     // #region Getters and Setters
@@ -83,6 +88,14 @@ function pivotBarChart() {
             return data;
         }
         data = value;
+        return chart;
+    };
+
+    chart.groupBy = function(value) {
+        if (!arguments.length) {
+            return groupBy;
+        }
+        groupBy = value;
         return chart;
     };
 

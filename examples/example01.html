@@ -48,24 +48,18 @@
             for (const subcategory of subcategories) {
                 for (const year of years) {
                     for (const quartal of quartals) {
-                        for (const month of months) {
-                            if (!quartalsToMonthsMapping[quartal].includes(month)) {
-                                continue;
-                            }
-
-                            for (const country of countries) {
-                                for (const gender of genders) {
-                                    data1.push({
-                                        category: category,
-                                        subcategory: subcategory,
-                                        year: year,
-                                        quartal: quartal,
-                                        month: month,
-                                        gender: gender,
-                                        country: country,
-                                        value: Math.random() * 100 + 1
-                                    });
-                                }
+                        for (const country of countries) {
+                            for (const gender of genders) {
+                                data1.push({
+                                    category: category,
+                                    subcategory: subcategory,
+                                    year: year,
+                                    quartal: quartal,
+                                    gender: gender,
+                                    country: country,
+                                    value: Math.random() * 100 + 1
+                                });
+                                ++skip;
                             }
                         }
                     }

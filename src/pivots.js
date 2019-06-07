@@ -403,7 +403,7 @@ function pivotBarChart() {
 
             point[property] = propertyValue;
         }
-        point['value'] = value;
+        point[pivot.value] = value;
 
         return point;
     }
@@ -449,14 +449,6 @@ function pivotBarChart() {
             return pivot;
         }
         pivot = value;
-        return chart;
-    };
-
-    chart.pointValue = function(value) {
-        if (!arguments.length) {
-            return pointValue;
-        }
-        pointValue = value;
         return chart;
     };
 

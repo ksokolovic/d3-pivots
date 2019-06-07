@@ -70,7 +70,9 @@ function pivotBarChart() {
             .data(data)
             .enter()
             .append('rect')
-            .attr('class', 'bar')
+            .attr('class', function(d) {
+                return getCategoryClass(d) + ' bar';
+            })
             .attr('x', function(d, i) {
                 let value = i * canvasWidth / data.length;
 
@@ -98,6 +100,11 @@ function pivotBarChart() {
                 return colors[i % yLabels.length];
             })
             .on('mouseover', function(d) {
+                // Hightlight
+                d3.selectAll('.bar:not(.' + getCategoryClass(d) + ')')
+                    .attr('opacity', 0.3);
+
+                // Show tooltip
                 tooltip.transition()
                     .duration(200)
                     .style('opacity', 0.9);
@@ -106,6 +113,10 @@ function pivotBarChart() {
                     .style('top', (d3.event.pageY - tooltip.node().getBoundingClientRect().height) + 'px');
             })
             .on('mouseout', function() {
+                // Remove highlight
+                d3.selectAll('.bar')
+                    .attr('opacity', 1);
+                // Hide tooltip
                 tooltip.transition()
                     .duration(500)
                     .style('opacity', 0);
@@ -304,6 +315,15 @@ function pivotBarChart() {
         tooltip += '</tbody></table>';
 
         return tooltip;
+    }
+
+    function getCategoryClass(point) {
+        let category = [];
+        for (const row of groupBy.rows) {
+            category.push(point[row]);
+        }
+
+        return category.join('_');
     }
 
     // #endregion

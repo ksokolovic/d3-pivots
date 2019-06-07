@@ -129,36 +129,6 @@ function pivotBarChart() {
     }
 
     function drawXAxis() {
-        if (axis.xLabels) {    
-            for (let i = 0; i < xLabels.length; ++i) {
-                let label = 'x' + i;
-                let className = 'text.' + label;
-                let xAxis = xLabels[i];
-
-                canvas.selectAll(className)
-                    .data(xAxis)
-                    .enter()
-                    .append('text')
-                    .attr('class', label)
-                    .attr('y', chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap)
-                    .attr('text-anchor', 'middle')
-                    .text(function(d) {
-                        return d;
-                    })
-                    .attr('x', function(d, i) {
-                        let container = d3.select('body').append('svg');
-                        container.append('text').text(d).style('font-size', '12').style('font-family', 'Arial');
-                        let size = container.node().getBBox();
-                        container.remove();
-
-                        return (i * xAxisWidth/xAxis.length) + ((xAxisWidth / xAxis.length)) / 2 + size.width / 8;
-                    })
-                    .style('font-size', '12')
-                    .style('font-family', 'Arial');
-            }
-        }
-
-        // X-Axis pivot ticks
         canvas.append('line')
             .attr('x1', 0 + 0.5)
             .attr('y1', chartHeight)
@@ -184,34 +154,71 @@ function pivotBarChart() {
             .attr('y2', chartHeight + 0.5)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
+
+        if (axis.xLabels) {    
+            drawXAxisLabels();
+        }
         
         if (axis.xTicks) {
-            let labelsReversed = xLabels;
-            let xTickCoordinates = [];
-            for (let i = 0; i < labelsReversed.length; ++i) {
-                let xAxis = labelsReversed[i];
-                
-                for (let j = 1; j <= xAxis.length - 1; ++j) {
-                    let x1 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
-                    let y1 = chartHeight;
-                    let x2 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
-                    let y2 = chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap;
-                    // Prevent tick line overlap
-                    if (xTickCoordinates.includes(x1)) {
-                        continue;
-                    }
-                    xTickCoordinates.push(x1);
+            drawXAxisTicks();
+        }
+    }
 
-                    canvas.append('line')
-                        .attr('x1', x1)
-                        .attr('y1', y1)
-                        .attr('x2', x2)
-                        .attr('y2', y2)
-                        .attr('class', xAxis[j])
-                        .style('stroke-width', 1)
-                        .style('stroke', '#000000');
-                }    
-            }
+    function drawXAxisLabels() {
+        for (let i = 0; i < xLabels.length; ++i) {
+            let label = 'x' + i;
+            let className = 'text.' + label;
+            let xAxis = xLabels[i];
+
+            canvas.selectAll(className)
+                .data(xAxis)
+                .enter()
+                .append('text')
+                .attr('class', label)
+                .attr('y', chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap)
+                .attr('text-anchor', 'middle')
+                .text(function(d) {
+                    return d;
+                })
+                .attr('x', function(d, i) {
+                    let container = d3.select('body').append('svg');
+                    container.append('text').text(d).style('font-size', '12').style('font-family', 'Arial');
+                    let size = container.node().getBBox();
+                    container.remove();
+
+                    return (i * xAxisWidth/xAxis.length) + ((xAxisWidth / xAxis.length)) / 2 + size.width / 8;
+                })
+                .style('font-size', '12')
+                .style('font-family', 'Arial');
+        }
+    }
+
+    function drawXAxisTicks() {
+        let labelsReversed = xLabels;
+        let xTickCoordinates = [];
+        for (let i = 0; i < labelsReversed.length; ++i) {
+            let xAxis = labelsReversed[i];
+            
+            for (let j = 1; j <= xAxis.length - 1; ++j) {
+                let x1 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
+                let y1 = chartHeight;
+                let x2 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
+                let y2 = chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap;
+                // Prevent tick line overlap
+                if (xTickCoordinates.includes(x1)) {
+                    continue;
+                }
+                xTickCoordinates.push(x1);
+
+                canvas.append('line')
+                    .attr('x1', x1)
+                    .attr('y1', y1)
+                    .attr('x2', x2)
+                    .attr('y2', y2)
+                    .attr('class', xAxis[j])
+                    .style('stroke-width', 1)
+                    .style('stroke', '#000000');
+            }    
         }
     }
 

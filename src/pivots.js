@@ -349,7 +349,7 @@ function pivotBarChart() {
             category.push(point[row]);
         }
 
-        return category.join('_');
+        return 'cls_' + category.join('_');
     }
 
     // #endregion 

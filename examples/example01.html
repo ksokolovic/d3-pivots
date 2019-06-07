@@ -37,13 +37,6 @@
         let genders = ['Male', 'Female'];
         let countries = ['USA', 'Serbia'];
 
-        let quartalsToMonthsMapping = {
-            'Q1': ['Jan', 'Feb', 'Mar'],
-            'Q2': ['Apr', 'May', 'Jun'],
-            'Q3': ['Jul', 'Aug', 'Sep'],
-            'Q4': ['Oct', 'Nov', 'Dec']
-        };
-
         for (const category of categories) {
             for (const subcategory of subcategories) {
                 for (const year of years) {
@@ -59,7 +52,6 @@
                                     country: country,
                                     value: Math.random() * 100 + 1
                                 });
-                                ++skip;
                             }
                         }
                     }
@@ -101,9 +93,10 @@
 
         $(document).ready(function() {
             let pivotBarChart = d3.pivotBarChart()
-                .data(data1)
+                .data(data2)
                 .width(1800)
-                .pivot(pivot1);
+                .pivot(pivot2)
+                .axis({xTicks: true, xLabels: true, yTicks: true, yLabels: true});
             d3.select('#chart')
                 .call(pivotBarChart);
         });

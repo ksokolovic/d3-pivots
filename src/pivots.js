@@ -5,7 +5,8 @@ function pivotBarChart() {
         height = 800,
         margin = {top: 10, right: 25, bottom: 10, left: 25},
         bar = {groupOffset: 10, offset: 2},
-        xAxisLabels = {horizontalGap: 12};
+        xAxisLabels = {horizontalGap: 12},
+        axis = {xTicks: true, xLabels: true, yTicks: true, yLabels: true};
 
     let chartWidth,
         chartHeight;
@@ -128,31 +129,33 @@ function pivotBarChart() {
     }
 
     function drawXAxis() {
-        for (let i = 0; i < xLabels.length; ++i) {
-            let label = 'x' + i;
-            let className = 'text.' + label;
-            let xAxis = xLabels[i];
+        if (axis.xLabels) {    
+            for (let i = 0; i < xLabels.length; ++i) {
+                let label = 'x' + i;
+                let className = 'text.' + label;
+                let xAxis = xLabels[i];
 
-            canvas.selectAll(className)
-                .data(xAxis)
-                .enter()
-                .append('text')
-                .attr('class', label)
-                .attr('y', chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap)
-                .attr('text-anchor', 'middle')
-                .text(function(d) {
-                    return d;
-                })
-                .attr('x', function(d, i) {
-                    let container = d3.select('body').append('svg');
-                    container.append('text').text(d).style('font-size', '12').style('font-family', 'Arial');
-                    let size = container.node().getBBox();
-                    container.remove();
+                canvas.selectAll(className)
+                    .data(xAxis)
+                    .enter()
+                    .append('text')
+                    .attr('class', label)
+                    .attr('y', chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap)
+                    .attr('text-anchor', 'middle')
+                    .text(function(d) {
+                        return d;
+                    })
+                    .attr('x', function(d, i) {
+                        let container = d3.select('body').append('svg');
+                        container.append('text').text(d).style('font-size', '12').style('font-family', 'Arial');
+                        let size = container.node().getBBox();
+                        container.remove();
 
-                    return (i * xAxisWidth/xAxis.length) + ((xAxisWidth / xAxis.length)) / 2 + size.width / 8;
-                })
-                .style('font-size', '12')
-                .style('font-family', 'Arial');
+                        return (i * xAxisWidth/xAxis.length) + ((xAxisWidth / xAxis.length)) / 2 + size.width / 8;
+                    })
+                    .style('font-size', '12')
+                    .style('font-family', 'Arial');
+            }
         }
 
         // X-Axis pivot ticks
@@ -181,37 +184,47 @@ function pivotBarChart() {
             .attr('y2', chartHeight + 0.5)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
+        
+        if (axis.xTicks) {
+            let labelsReversed = xLabels;
+            let xTickCoordinates = [];
+            for (let i = 0; i < labelsReversed.length; ++i) {
+                let xAxis = labelsReversed[i];
+                
+                for (let j = 1; j <= xAxis.length - 1; ++j) {
+                    let x1 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
+                    let y1 = chartHeight;
+                    let x2 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
+                    let y2 = chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap;
+                    // Prevent tick line overlap
+                    if (xTickCoordinates.includes(x1)) {
+                        continue;
+                    }
+                    xTickCoordinates.push(x1);
 
-        let labelsReversed = xLabels;
-        let xTickCoordinates = [];
-        for (let i = 0; i < labelsReversed.length; ++i) {
-            let xAxis = labelsReversed[i];
-            
-            for (let j = 1; j <= xAxis.length - 1; ++j) {
-                let x1 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
-                let y1 = chartHeight;
-                let x2 = j * xAxisWidth / xAxis.length - bar.offset / 2 + bar.groupOffset / 2;
-                let y2 = chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap;
-                // Prevent tick line overlap
-                if (xTickCoordinates.includes(x1)) {
-                    continue;
-                }
-                xTickCoordinates.push(x1);
-
-                canvas.append('line')
-                    .attr('x1', x1)
-                    .attr('y1', y1)
-                    .attr('x2', x2)
-                    .attr('y2', y2)
-                    .attr('class', xAxis[j])
-                    .style('stroke-width', 1)
-                    .style('stroke', '#000000');
-            }    
+                    canvas.append('line')
+                        .attr('x1', x1)
+                        .attr('y1', y1)
+                        .attr('x2', x2)
+                        .attr('y2', y2)
+                        .attr('class', xAxis[j])
+                        .style('stroke-width', 1)
+                        .style('stroke', '#000000');
+                }    
+            }
         }
     }
 
     function drawYAxis() {
         let yAxis = d3.axisLeft().scale(y);
+
+        if (!axis.yTicks) {
+            yAxis.tickSize(0);
+        }
+
+        if (!axis.yLabels) {
+            yAxis.tickFormat('');
+        }
 
         canvas
             .append('g')
@@ -465,6 +478,14 @@ function pivotBarChart() {
             return colors;
         }
         colors = value;
+        return chart;
+    };
+
+    chart.axis = function(value) {
+        if (!arguments.length) {
+            return axis;
+        }
+        axis = value;
         return chart;
     };
 

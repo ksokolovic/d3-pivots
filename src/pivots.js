@@ -14,6 +14,7 @@ function pivotBarChart() {
         xAxisWidth = 0;
 
     let data = null,
+        plotData = null,
         pivot = null,
         xLabels = null,
         yLabels = null;
@@ -30,8 +31,8 @@ function pivotBarChart() {
 
     function chart(selection) {
         selection.each(function() {
-            indexData();
-            data = prepareData();
+            let indexedData = indexData(data);
+            plotData = prepareData(indexedData);
 
             yLabels = getYAxisLabels();
             xLabels = getXAxisLabels();
@@ -61,7 +62,7 @@ function pivotBarChart() {
     // #region Chart drawing
 
     function drawBars() {
-        colors = getRandomColorPalette(data.length);
+        colors = getRandomColorPalette(plotData.length);
         let barOffset = 0;
 
         let tooltip = d3.select('body')
@@ -77,7 +78,7 @@ function pivotBarChart() {
                 return getCategoryClass(d) + ' bar';
             })
             .attr('x', function(d, i) {
-                let value = i * canvasWidth / data.length;
+                let value = i * canvasWidth / plotData.length;
 
                 let groupSize = yLabels.length;
                 if (i % groupSize === 0) {
@@ -88,7 +89,7 @@ function pivotBarChart() {
                 return value + barOffset;
             })
             .attr('width', function() {
-                let barWidth = Math.abs((canvasWidth / data.length) - bar.offset);
+                let barWidth = Math.abs((canvasWidth / plotData.length) - bar.offset);
                 xAxisWidth += (barWidth + bar.offset);
 
                 return barWidth;
@@ -239,7 +240,7 @@ function pivotBarChart() {
     }
 
     function maxValue() {
-        let mappedData = data.map(point => pointValue(point));
+        let mappedData = plotData.map(point => pointValue(point));
         let maxPoint = _.max(mappedData, function(point) {
             return point;
         });
@@ -291,7 +292,7 @@ function pivotBarChart() {
             let group = pivot.columns[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[pivot.columns[pivot.columns.length - 1]], data.length / unique[pivot.columns[pivot.columns.length - 1]].length / yLabels.length));
+        xLabels.push(repeatArray(unique[pivot.columns[pivot.columns.length - 1]], plotData.length / unique[pivot.columns[pivot.columns.length - 1]].length / yLabels.length));
 
         return xLabels;
     }
@@ -353,10 +354,15 @@ function pivotBarChart() {
 
     // #region Data Wrangling
 
-    function indexData() {
-        for (const point of data) {
-            point.key = getKey(point);
+    function indexData(data) {
+        let indexed = [];
+
+        for (let i = 0; i < data.length; ++i) {
+            let original = data[i];
+            let point = {...original, key: getKey(original)};
+            indexed.push(point);
         }
+        return indexed;
     }
 
     function getKey(point) {
@@ -373,7 +379,7 @@ function pivotBarChart() {
         return keyArray.join('#');
     }
 
-    function prepareData() {
+    function prepareData(data) {
         let columnValues = _.values(getUniqueXValuesSorted());
         let rowValues = _.values(getUniqueYValuesSorted());
 

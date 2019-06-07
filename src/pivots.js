@@ -30,6 +30,9 @@ function pivotBarChart() {
 
     function chart(selection) {
         selection.each(function() {
+            indexData();
+            data = prepareData();
+
             yLabels = getYAxisLabels();
             xLabels = getXAxisLabels();
 
@@ -248,8 +251,11 @@ function pivotBarChart() {
         return [].concat(...Array.from({ length: times }, () => array));
     }
 
-    function cartesianProductOf() {
-        let product = _.reduce(arguments, function(a, b) {
+    function cartesianProductOf(separator, ...arrays) {
+        if (!separator) {
+            separator = ' ';
+        }
+        let product = _.reduce(arrays, function(a, b) {
             return _.flatten(_.map(a, function(x) {
                 return _.map(b, function(y) {
                     return x.concat([y]);
@@ -257,7 +263,7 @@ function pivotBarChart() {
             }), true);
         }, [ [] ]);
 
-        return product.map(p => p.join(' '));
+        return product.map(p => p.join(separator));
     }
 
     function getUniqueXValues() {
@@ -265,6 +271,16 @@ function pivotBarChart() {
 
         for (const group of groupBy.columns) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
+        }
+
+        return unique;
+    }
+
+    function getUniqueXValuesSorted() {
+        let unique = getUniqueXValues();
+
+        for (let key in unique) {
+            unique[key] = unique[key].sort();
         }
 
         return unique;
@@ -288,6 +304,16 @@ function pivotBarChart() {
 
         for (const group of groupBy.rows) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
+        }
+
+        return unique;
+    }
+
+    function getUniqueYValuesSorted() {
+        let unique = getUniqueYValues();
+
+        for (let key in unique) {
+            unique[key] = unique[key].sort();
         }
 
         return unique;
@@ -324,6 +350,65 @@ function pivotBarChart() {
         }
 
         return category.join('_');
+    }
+
+    // #endregion 
+
+    // #region Data Wrangling
+
+    function indexData() {
+        for (const point of data) {
+            point.key = getKey(point);
+        }
+    }
+
+    function getKey(point) {
+        let keyArray = [];
+        
+        for (let columnKey of groupBy.columns) {
+            keyArray.push(point[columnKey]);
+        }
+
+        for (let rowKey of groupBy.rows) {
+            keyArray.push(point[rowKey]);
+        }
+
+        return keyArray.join('#');
+    }
+
+    function prepareData() {
+        let columnValues = _.values(getUniqueXValuesSorted());
+        let rowValues = _.values(getUniqueYValuesSorted());
+
+        let keys = cartesianProductOf('#', ...columnValues, ...rowValues);
+
+        let objectProperties = groupBy.columns.concat(groupBy.rows);
+        
+        let result = [];
+        for (const key of keys) {
+            let original = _.find(data, function(point) {
+                return point.key === key;
+            });
+
+            let value = original ? original.value : 0;
+            result.push(buildObject(objectProperties, key, value));
+        }
+        return result;
+    }
+
+    function buildObject(properties, key, value) {
+        let point = {};
+        let propertyValues = key.split('#');
+
+        for (let i = 0; i < properties.length; ++i) {
+            let property = properties[i];
+            let propertyValue = propertyValues[i];
+
+            point[property] = propertyValue;
+        }
+        point['value'] = value;
+
+        return point;
     }
 
     // #endregion

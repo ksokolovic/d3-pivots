@@ -252,9 +252,6 @@ function pivotBarChart() {
     }
 
     function cartesianProductOf(separator, ...arrays) {
-        if (!separator) {
-            separator = ' ';
-        }
         let product = _.reduce(arrays, function(a, b) {
             return _.flatten(_.map(a, function(x) {
                 return _.map(b, function(y) {
@@ -323,7 +320,7 @@ function pivotBarChart() {
         let unique = getUniqueYValues();
         let uniqueValues = Object.entries(unique).map(entry => entry[1]);
 
-        return cartesianProductOf(...uniqueValues);
+        return cartesianProductOf(' ', ...uniqueValues);
     }
 
     function getTooltipHtml(point) {

@@ -21,8 +21,8 @@ function pivotBarChart() {
     let y = undefined;
 
     let pointValue = function(point) {
-        if (point.hasOwnProperty('value')) {
-            return point.value;
+        if (point.hasOwnProperty(pivot.value)) {
+            return point[pivot.value];
         }
         return 0;
     };
@@ -387,7 +387,7 @@ function pivotBarChart() {
                 return point.key === key;
             });
 
-            let value = original ? original.value : 0;
+            let value = original ? pointValue(original) : 0;
             result.push(buildObject(objectProperties, key, value));
         }
         return result;

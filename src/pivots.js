@@ -14,6 +14,7 @@ function pivotBarChart() {
         xAxisWidth = 0;
 
     let data = null,
+        chartData = null,
         pivot = null,
         xLabels = null,
         yLabels = null;
@@ -30,11 +31,11 @@ function pivotBarChart() {
 
     function chart(selection) {
         selection.each(function() {
-            indexData();
-            data = prepareData();
+            let indexed = indexData(data);
+            chartData = prepareData(indexed);
 
-            yLabels = getYAxisLabels();
-            xLabels = getXAxisLabels();
+            yLabels = getYAxisLabels(chartData);
+            xLabels = getXAxisLabels(chartData);
 
             // Fit the chart with margins
             chartWidth = width - margin.left - margin.right;
@@ -61,7 +62,7 @@ function pivotBarChart() {
     // #region Chart drawing
 
     function drawBars() {
-        colors = getRandomColorPalette(data.length);
+        colors = getRandomColorPalette(chartData.length);
         let barOffset = 0;
 
         let tooltip = d3.select('body')
@@ -70,14 +71,14 @@ function pivotBarChart() {
             .style('opacity', 0);
 
         canvas.selectAll('.bar')
-            .data(data)
+            .data(chartData)
             .enter()
             .append('rect')
             .attr('class', function(d) {
                 return getCategoryClass(d) + ' bar';
             })
             .attr('x', function(d, i) {
-                let value = i * canvasWidth / data.length;
+                let value = i * canvasWidth / chartData.length;
 
                 let groupSize = yLabels.length;
                 if (i % groupSize === 0) {
@@ -88,7 +89,7 @@ function pivotBarChart() {
                 return value + barOffset;
             })
             .attr('width', function() {
-                let barWidth = Math.abs((canvasWidth / data.length) - bar.offset);
+                let barWidth = Math.abs((canvasWidth / chartData.length) - bar.offset);
                 xAxisWidth += (barWidth + bar.offset);
 
                 return barWidth;
@@ -263,7 +264,7 @@ function pivotBarChart() {
         return product.map(p => p.join(separator));
     }
 
-    function getUniqueXValues() {
+    function getUniqueXValues(data) {
         let unique = {};
 
         for (const group of pivot.columns) {
@@ -273,8 +274,8 @@ function pivotBarChart() {
         return unique;
     }
 
-    function getUniqueXValuesSorted() {
-        let unique = getUniqueXValues();
+    function getUniqueXValuesSorted(data) {
+        let unique = getUniqueXValues(data);
 
         for (let key in unique) {
             unique[key] = unique[key].sort();
@@ -283,8 +284,8 @@ function pivotBarChart() {
         return unique;
     }
 
-    function getXAxisLabels() {
-        let unique = getUniqueXValues();
+    function getXAxisLabels(data) {
+        let unique = getUniqueXValues(data);
         let xLabels = [];
         xLabels.push(unique[pivot.columns[0]]);
         for (let i = 1; i < pivot.columns.length - 1; ++i) {
@@ -296,7 +297,7 @@ function pivotBarChart() {
         return xLabels;
     }
 
-    function getUniqueYValues() {
+    function getUniqueYValues(data) {
         let unique = {};
 
         for (const group of pivot.rows) {
@@ -306,8 +307,8 @@ function pivotBarChart() {
         return unique;
     }
 
-    function getUniqueYValuesSorted() {
-        let unique = getUniqueYValues();
+    function getUniqueYValuesSorted(data) {
+        let unique = getUniqueYValues(data);
 
         for (let key in unique) {
             unique[key] = unique[key].sort();
@@ -316,8 +317,8 @@ function pivotBarChart() {
         return unique;
     }
 
-    function getYAxisLabels() {
-        let unique = getUniqueYValues();
+    function getYAxisLabels(data) {
+        let unique = getUniqueYValues(data);
         let uniqueValues = Object.entries(unique).map(entry => entry[1]);
 
         return cartesianProductOf(' ', ...uniqueValues);
@@ -353,10 +354,17 @@ function pivotBarChart() {
 
     // #region Data Wrangling
 
-    function indexData() {
-        for (const point of data) {
-            point.key = getKey(point);
+    function indexData(data) {
+        let indexed = [];
+
+        for (let i = 0; i < data.length; ++i) {
+            let original = data[i];
+            let indexedPoint = {...original, key: getKey(original)};
+
+            indexed.push(indexedPoint);
         }
+
+        return indexed;
     }
 
     function getKey(point) {
@@ -373,9 +381,9 @@ function pivotBarChart() {
         return keyArray.join('#');
     }
 
-    function prepareData() {
-        let columnValues = _.values(getUniqueXValuesSorted());
-        let rowValues = _.values(getUniqueYValuesSorted());
+    function prepareData(indexedData) {
+        let columnValues = _.values(getUniqueXValuesSorted(indexedData));
+        let rowValues = _.values(getUniqueYValuesSorted(indexedData));
 
         let keys = cartesianProductOf('#', ...columnValues, ...rowValues);
 
@@ -383,7 +391,7 @@ function pivotBarChart() {
         
         let result = [];
         for (const key of keys) {
-            let original = _.find(data, function(point) {
+            let original = _.find(indexedData, function(point) {
                 return point.key === key;
             });
 

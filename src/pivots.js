@@ -26,6 +26,7 @@ function pivotBarChart() {
         }
         return 0;
     };
+    let colors = null;
 
     function chart(selection) {
         selection.each(function() {
@@ -57,7 +58,7 @@ function pivotBarChart() {
     // #region Chart drawing
 
     function drawBars() {
-        let colors = getRandomColorPalette(data.length);
+        colors = getRandomColorPalette(data.length);
         let barOffset = 0;
 
         let tooltip = d3.select('body')
@@ -342,6 +343,14 @@ function pivotBarChart() {
             return pointValue;
         }
         pointValue = value;
+        return chart;
+    };
+
+    chart.colors = function(value) {
+        if (!arguments.length) {
+            return colors;
+        }
+        colors = value;
         return chart;
     };
 

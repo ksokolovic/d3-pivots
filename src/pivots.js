@@ -5,7 +5,7 @@ function pivotBarChart() {
         height = 800,
         margin = {top: 10, right: 25, bottom: 10, left: 25},
         bar = {groupOffset: 10, offset: 2},
-        xAxisLabels = {horizontalGap: 22};
+        xAxisLabels = {horizontalGap: 12};
 
     let chartWidth,
         chartHeight;
@@ -35,7 +35,7 @@ function pivotBarChart() {
 
             // Fit the chart with margins
             chartWidth = width - margin.left - margin.right;
-            chartHeight = height - margin.top - margin.bottom + 15 - xLabels.length * xAxisLabels.horizontalGap;
+            chartHeight = height - margin.top - margin.bottom + 15 - 2 * xLabels.length * xAxisLabels.horizontalGap;
 
             canvasWidth = chartWidth - (xLabels[xLabels.length - 1].length - 1) * bar.groupOffset;
             y = d3.scaleLinear().range([chartHeight, 0]);
@@ -123,7 +123,7 @@ function pivotBarChart() {
                 .enter()
                 .append('text')
                 .attr('class', label)
-                .attr('y', height - 15 - i * xAxisLabels.horizontalGap)
+                .attr('y', chartHeight + (xLabels.length - i) * xAxisLabels.horizontalGap)
                 .attr('text-anchor', 'middle')
                 .text(function(d) {
                     return d;

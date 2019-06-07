@@ -130,13 +130,14 @@ function pivotBarChart() {
                 })
                 .attr('x', function(d, i) {
                     let container = d3.select('body').append('svg');
-                    container.append('text').text(d).style('font-size', '12');
+                    container.append('text').text(d).style('font-size', '12').style('font-family', 'Arial');
                     let size = container.node().getBBox();
                     container.remove();
 
                     return (i * xAxisWidth/xAxis.length) + ((xAxisWidth / xAxis.length)) / 2 + size.width / 8;
                 })
-                .style('font-size', '12');
+                .style('font-size', '12')
+                .style('font-family', 'Arial');
         }
 
         // X-Axis pivot ticks

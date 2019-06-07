@@ -93,22 +93,23 @@
         }
         // #endregion
         
-        let groupBy1 = {
-            columns: ['category', 'subcategory', 'year'],
-            rows: ['country', 'gender', 'quartal']
+        let pivot1 = {
+            columns: ['category', 'subcategory', 'year', 'quartal'],
+            rows: ['country', 'gender'],
+            value: 'value'
         };
 
-        let groupBy2 = {
+        let pivot2 = {
             columns: ['category', 'subcategory', 'year'],
-            rows: ['country', 'gender']
+            rows: ['country', 'gender'],
+            value: 'value'
         };
 
         $(document).ready(function() {
             let pivotBarChart = d3.pivotBarChart()
-                .data(data2)
+                .data(data1)
                 .width(1800)
-                .pointValue(function(d) { return d.value; })
-                .groupBy(groupBy2);
+                .pivot(pivot1);
             d3.select('#chart')
                 .call(pivotBarChart);
         });

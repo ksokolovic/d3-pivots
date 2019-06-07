@@ -14,7 +14,7 @@ function pivotBarChart() {
         xAxisWidth = 0;
 
     let data = null,
-        groupBy = null,
+        pivot = null,
         xLabels = null,
         yLabels = null;
 
@@ -266,7 +266,7 @@ function pivotBarChart() {
     function getUniqueXValues() {
         let unique = {};
 
-        for (const group of groupBy.columns) {
+        for (const group of pivot.columns) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 
@@ -286,12 +286,12 @@ function pivotBarChart() {
     function getXAxisLabels() {
         let unique = getUniqueXValues();
         let xLabels = [];
-        xLabels.push(unique[groupBy.columns[0]]);
-        for (let i = 1; i < groupBy.columns.length - 1; ++i) {
-            let group = groupBy.columns[i];
+        xLabels.push(unique[pivot.columns[0]]);
+        for (let i = 1; i < pivot.columns.length - 1; ++i) {
+            let group = pivot.columns[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[groupBy.columns[groupBy.columns.length - 1]], data.length / unique[groupBy.columns[groupBy.columns.length - 1]].length / yLabels.length));
+        xLabels.push(repeatArray(unique[pivot.columns[pivot.columns.length - 1]], data.length / unique[pivot.columns[pivot.columns.length - 1]].length / yLabels.length));
 
         return xLabels;
     }
@@ -299,7 +299,7 @@ function pivotBarChart() {
     function getUniqueYValues() {
         let unique = {};
 
-        for (const group of groupBy.rows) {
+        for (const group of pivot.rows) {
             unique[group] = _.unique(data, group).map(unique => unique[group]);
         }
 
@@ -342,7 +342,7 @@ function pivotBarChart() {
 
     function getCategoryClass(point) {
         let category = [];
-        for (const row of groupBy.rows) {
+        for (const row of pivot.rows) {
             category.push(point[row]);
         }
 
@@ -362,11 +362,11 @@ function pivotBarChart() {
     function getKey(point) {
         let keyArray = [];
         
-        for (let columnKey of groupBy.columns) {
+        for (let columnKey of pivot.columns) {
             keyArray.push(point[columnKey]);
         }
 
-        for (let rowKey of groupBy.rows) {
+        for (let rowKey of pivot.rows) {
             keyArray.push(point[rowKey]);
         }
 
@@ -379,7 +379,7 @@ function pivotBarChart() {
 
         let keys = cartesianProductOf('#', ...columnValues, ...rowValues);
 
-        let objectProperties = groupBy.columns.concat(groupBy.rows);
+        let objectProperties = pivot.columns.concat(pivot.rows);
         
         let result = [];
         for (const key of keys) {
@@ -444,11 +444,11 @@ function pivotBarChart() {
         return chart;
     };
 
-    chart.groupBy = function(value) {
+    chart.pivot = function(value) {
         if (!arguments.length) {
-            return groupBy;
+            return pivot;
         }
-        groupBy = value;
+        pivot = value;
         return chart;
     };
 

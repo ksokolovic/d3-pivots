@@ -362,7 +362,10 @@ function pivotBarChart() {
             let group = pivot.columns[i];
             xLabels.push(repeatArray(unique[group], xLabels[i - 1].length));
         }
-        xLabels.push(repeatArray(unique[pivot.columns[pivot.columns.length - 1]], data.length / unique[pivot.columns[pivot.columns.length - 1]].length / yLabels.length));
+
+        if (pivot.columns.length > 1) {
+            xLabels.push(repeatArray(unique[pivot.columns[pivot.columns.length - 1]], data.length / unique[pivot.columns[pivot.columns.length - 1]].length / yLabels.length));
+        }
 
         return xLabels;
     }

@@ -93,10 +93,11 @@
 
         $(document).ready(function() {
             let pivotBarChart = d3.pivotBarChart()
-                .data(data2)
+                .data(data1)
                 .width(1800)
-                .pivot(pivot2)
-                .axis({xTicks: true, xLabels: true, yTicks: true, yLabels: true});
+                .pivot(pivot1)
+                .axis({xTicks: true, xLabels: true, yTicks: true, yLabels: true})
+                .grid({horizontal: true, vertical: true});
             d3.select('#chart')
                 .call(pivotBarChart);
         });

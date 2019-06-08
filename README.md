@@ -4,6 +4,8 @@ D3 plugin allowing to create pivot bar chart from a flat data set.
 
 The plugin aims to follow the convention for developing D3 plugins described in [Towards Reusable Charts](https://bost.ocks.org/mike/chart/) by Mike Bostock.
 
+![Example01](images/d3-pivot-example01.png)
+
 ## Installing
 
 If you are using NPM, you can install the plugin via:

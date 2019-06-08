@@ -20,6 +20,7 @@ function pivotBarChart() {
         xLabels = null,
         yLabels = null;
 
+    let x = [];
     let y = undefined;
 
     let pointValue = function(point) {
@@ -57,10 +58,44 @@ function pivotBarChart() {
             drawBars();
             drawXAxis();
             drawYAxis();
+
+            drawHorizontalGridlines();
+            drawVerticalGridlines();
         });
     }
 
     // #region Chart drawing
+
+    function drawVerticalGridlines() {
+        let verticalGrid = canvas.append('g')
+            .attr('class', 'grid');
+
+        for (const xValue of x) {
+            verticalGrid
+                .append('line')
+                .attr('x1', xValue)
+                .attr('y1', 0)
+                .attr('x2', xValue)
+                .attr('y2', chartHeight)
+                .style('stroke-dasharray', ('3, 3'))
+                .style('stroke-width', 1)
+                .style('stroke', '#000000');
+        }
+    }
+
+    function drawHorizontalGridlines() {
+        canvas.append('g')
+            .attr('class', 'grid')
+            .style('stroke-dasharray', ('3, 3'))
+            .call(makeHorizontalGridlines()
+                .tickSize(-chartWidth-14)
+                .tickFormat('')
+            );
+    }
+
+    function makeHorizontalGridlines() {
+        return d3.axisLeft(y).ticks(y.ticks().length);
+    }
 
     function drawBars() {
         colors = getRandomColorPalette(chartData.length);
@@ -136,6 +171,7 @@ function pivotBarChart() {
             .attr('y2', chartHeight + xLabels.length * xAxisLabels.horizontalGap)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
+        x.push(0 + 0.5);
 
         canvas.append('line')
             .attr('x1', xAxisWidth - 0.5 + 2 * bar.offset)
@@ -144,6 +180,7 @@ function pivotBarChart() {
             .attr('y2', chartHeight + xLabels.length * xAxisLabels.horizontalGap)
             .style('stroke-width', 1)
             .style('stroke', '#000000');
+        x.push(xAxisWidth - 0.5 + 2 * bar.offset);
 
         // Add additional 0.5 pixels to the y-coordinate of the axis line
         // to match the left y-axis tick
@@ -218,6 +255,7 @@ function pivotBarChart() {
                     .attr('class', xAxis[j])
                     .style('stroke-width', 1)
                     .style('stroke', '#000000');
+                x.push(x1);
             }    
         }
     }

@@ -1,6 +1,6 @@
 {
     "name": "d3-pivots",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "description": "D3 plugin allowing to create pivot bar chart from a flat data set.",
     "keywords": [
         "d3",
@@ -13,6 +13,9 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/ksokolovic/d3-pivots.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ksokolovic/d3-pivots/issues"
     },
     "scripts": {
         "pretest": "rollup -c",

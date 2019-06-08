@@ -32,7 +32,7 @@ The plugin depends on the [Underscore](https://underscorejs.org/) JavaScript lib
 
 Check out the `examples/example01.html` and the corresponding `data.js` to see the plugin in practice. 
 
-Below is listed the snipped that's used for initializing the pivot bar chart with the sample data set:
+Below is listed the snippet that's used for initializing the pivot bar chart with the sample data set:
 
 ```js
 let pivot = {

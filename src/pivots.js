@@ -6,7 +6,8 @@ function pivotBarChart() {
         margin = {top: 10, right: 25, bottom: 10, left: 25},
         bar = {groupOffset: 10, offset: 2},
         xAxisLabels = {horizontalGap: 12},
-        axis = {xTicks: true, xLabels: true, yTicks: true, yLabels: true};
+        axis = {xTicks: true, xLabels: true, yTicks: true, yLabels: true},
+        grid = {horizontal: true, vertical: true};
 
     let chartWidth,
         chartHeight;
@@ -531,6 +532,14 @@ function pivotBarChart() {
             return axis;
         }
         axis = value;
+        return chart;
+    };
+
+    chart.grid = function(value) {
+        if (!arguments.length) {
+            return grid;
+        }
+        grid = value;
         return chart;
     };
 

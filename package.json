@@ -1,7 +1,7 @@
 {
-    "name": "pivots",
-    "version": "0.0.1",
-    "description": "TODO",
+    "name": "d3-pivots",
+    "version": "1.0.1",
+    "description": "D3 plugin allowing to create pivot bar chart from a flat data set.",
     "keywords": [
         "d3",
         "d3-module"
@@ -14,14 +14,26 @@
         "type": "git",
         "url": "https://github.com/ksokolovic/d3-pivots.git"
     },
+    "bugs": {
+        "url": "https://github.com/ksokolovic/d3-pivots/issues"
+    },
     "scripts": {
-        "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-pivots.js -- index.js",
-        "test": "",
-        "prepublish": "npm run test && uglifyjs build/d3-pivots.js -c -m -o build/d3-pivots.min.js",
+        "pretest": "rollup -c",
+        "test": "tape 'test/**/*-test.js' && eslint src",
+        "prepublish": "rm -rf build && yarn test",
         "postpublish": "zip -j build/d3-pivots.zip -- LICENSE README.md build/d3-pivots.js build/d3-pivots.min.js"
     },
     "devDependencies": {
+        "d3": "5.9.2",
+        "eslint": "5.16.0",
         "rollup": "1.12.4",
-        "uglify-js": "3.5.15"
+        "rollup-plugin-terser": "5.0.0",
+        "tape": "4.10.2",
+        "uglify-js": "3.5.15",
+        "underscore": "^1.9.1"
+    },
+    "dependencies": {
+        "d3": "5.9.2",
+        "underscore": "^1.9.1"
     }
 }

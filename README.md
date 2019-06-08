@@ -151,4 +151,4 @@ This configuration object defines whether horizontal and/or vertical grid lines 
 
 ## License
 
-This project is licensed under the MIT license. See the (LICENSE)[LICENSE] for details.
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) for details.

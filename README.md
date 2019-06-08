@@ -1,6 +1,6 @@
 # d3-pivots
 
-D3 plugin allowing to create bar chart from pivot-like data set. 
+D3 plugin allowing to create pivot bar chart from a flat data set.
 
 The plugin aims to follow the convention for developing D3 plugins described in [Towards Reusable Charts](https://bost.ocks.org/mike/chart/) by Mike Bostock.
 
@@ -28,7 +28,27 @@ The plugin depends on the [Underscore](https://underscorejs.org/) JavaScript lib
 
 ## Examples
 
-TODO
+Check out the `examples/example01.html` and the corresponding `data.js` to see the plugin in practice. 
+
+Below is listed the snipped that's used for initializing the pivot bar chart with the sample data set:
+
+```js
+let pivot = {
+    columns: ['category', 'subcategory', 'year'],
+    rows: ['country', 'gender'],
+    value: 'value'
+};
+
+let pivotBarChart = d3.pivotBarChart()
+    .data(data)
+    .width(1800)
+    .pivot(pivot)
+    .axis({xTicks: true, xLabels: true, yTicks: true, yLabels: true})
+    .grid({horizontal: true, vertical: true});
+
+d3.select('#chart')
+    .call(pivotBarChart);
+```
 
 ## API Reference
 
@@ -76,8 +96,8 @@ This configuration object specifies the pivot structure of the original flat dat
 
 The following is included in the `pivot` configuration object:
 
-- `columns`: Array of fields to use as pivot columns.
-- `rows`: Array of fields to use as pivot rows.
+- `columns`: Array of fields to use as pivot columns. Field values will be sorted in natural sort order when rendering the chart.
+- `rows`: Array of fields to use as pivot rows. Field values will be sorted in natural sort order when rendering a chart.
 - `value`: Field that corresponds to the actual data point value. Defaults to `value` field.
 
 NOTE: Fields specified in the `pivot` object must match the actual fields from the original data set.

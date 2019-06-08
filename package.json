@@ -1,7 +1,7 @@
 {
     "name": "d3-pivots",
     "version": "0.0.1",
-    "description": "TODO",
+    "description": "D3 plugin allowing to create pivot bar chart from a flat data set.",
     "keywords": [
         "d3",
         "d3-module"

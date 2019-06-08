@@ -7,6 +7,8 @@
     <script src="../build/d3-pivots.js"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
 
+    <script src="data.js"></script>
+
     <style>
         div.tooltip {
             position: absolute;
@@ -25,67 +27,7 @@
     </div>
 
     <script>
-        // #region Sample data
-        let data1 = [];
-        let data2 = [];
-
-        let categories = ['Category 1', 'Category 2', 'Category 3'];
-        let subcategories = ['Subcategory 1', 'Subcategory 2'];
-        let years = [2018, 2019];
-        let quartals = ['Q1', 'Q2', 'Q3', 'Q4'];
-        let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        let genders = ['Male', 'Female'];
-        let countries = ['USA', 'Serbia'];
-
-        for (const category of categories) {
-            for (const subcategory of subcategories) {
-                for (const year of years) {
-                    for (const quartal of quartals) {
-                        for (const country of countries) {
-                            for (const gender of genders) {
-                                data1.push({
-                                    category: category,
-                                    subcategory: subcategory,
-                                    year: year,
-                                    quartal: quartal,
-                                    gender: gender,
-                                    country: country,
-                                    value: Math.random() * 100 + 1
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (const category of categories) {
-            for (const subcategory of subcategories) {
-                for (const year of years) {
-                    for (const country of countries) {
-                        for (const gender of genders) {
-                            data2.push({
-                                category: category,
-                                subcategory: subcategory,
-                                year: year,
-                                gender: gender,
-                                country: country,
-                                value: Math.random() * 100 + 1
-                            });
-                        }
-                    }
-                }
-            }
-        }
-        // #endregion
-        
-        let pivot1 = {
-            columns: ['category', 'subcategory', 'year', 'quartal'],
-            rows: ['country', 'gender'],
-            value: 'value'
-        };
-
-        let pivot2 = {
+        let pivot = {
             columns: ['category', 'subcategory', 'year'],
             rows: ['country', 'gender'],
             value: 'value'
@@ -93,9 +35,9 @@
 
         $(document).ready(function() {
             let pivotBarChart = d3.pivotBarChart()
-                .data(data1)
+                .data(data)
                 .width(1800)
-                .pivot(pivot1)
+                .pivot(pivot)
                 .axis({xTicks: true, xLabels: true, yTicks: true, yLabels: true})
                 .grid({horizontal: true, vertical: true});
             d3.select('#chart')
